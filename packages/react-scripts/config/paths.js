@@ -18,6 +18,12 @@ const url = require('url');
 // https://github.com/facebookincubator/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const existsApp = relativePath => {
+	const path = resolveApp(relativePath);
+	return fs.existsSync(path) 
+		? path
+		: null;
+}
 
 const envPublicUrl = process.env.PUBLIC_URL;
 
@@ -62,10 +68,19 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
+
+  // custom files
+  webpackOverride: existsApp('webpack.override.js')
 };
 
 // @remove-on-eject-begin
 const resolveOwn = relativePath => path.resolve(__dirname, '..', relativePath);
+const existsOwn = relativePath => {
+	const path = resolveApp(relativePath);
+	return fs.existsSync(path) 
+		? relativePath
+		: null;
+}
 
 // config before eject: we're in ./node_modules/react-scripts/config/
 module.exports = {
@@ -85,6 +100,19 @@ module.exports = {
   // These properties only exist before ejecting:
   ownPath: resolveOwn('.'),
   ownNodeModules: resolveOwn('node_modules'), // This is empty on npm 3
+
+  // custom files
+  webpackOverride: existsApp('webpack.override.js'),
+  eslintOverride:  existsApp('eslint.override.js'),
+  eslintrc: 
+    existsApp('.eslintrc')
+    || existsApp('.eslintrc.js')
+    || existsApp('.eslintrc.json'),
+  babelOverride: existsApp('babel.override.js'),
+  babelrc: 
+    existsApp('.babelrc') 
+    || existsApp('.babelrc.js') 
+    || existsApp('.babelrc.json'),
 };
 
 const ownPackageJson = require('../package.json');
@@ -115,6 +143,19 @@ if (
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),
     ownNodeModules: resolveOwn('node_modules'),
+
+    // custom files
+    webpackOverride: existsOwn('webpack.override.js'),
+    eslintOverride:  existsOwn('eslint.override.js'),
+    eslintrc: 
+      existsOwn('.eslintrc')
+      || existsOwn('.eslintrc.js')
+      || existsOwn('.eslintrc.json'),
+    babelOverride: existsOwn('babel.override.js'),
+    babelrc: 
+      existsOwn('.babelrc')
+      || existsOwn('.babelrc.js') 
+      || existsOwn('.babelrc.json'),
   };
 }
 // @remove-on-eject-end
