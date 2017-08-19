@@ -9,8 +9,12 @@
 'use strict';
 
 const babelJest = require('babel-jest');
+const paths = require('../paths');
+const overrideIfExists = require('../override');
 
-module.exports = babelJest.createTransformer({
+const config = overrideIfExists(paths.babelOverride, paths.babelrc, {
   presets: [require.resolve('babel-preset-react-app')],
   babelrc: false,
 });
+
+module.exports = babelJest.createTransformer(config);

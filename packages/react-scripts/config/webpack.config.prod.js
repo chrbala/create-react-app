@@ -22,13 +22,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
-
-const overrideIfExists = (override, fallback, config) =>
-  override
-    ? require(override)(config)
-    : fallback
-      ? require(fallback) 
-      : config;
+const overrideIfExists = require('./override');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.

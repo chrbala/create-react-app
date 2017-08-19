@@ -21,7 +21,6 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
-console.log(paths);
 
 const overrideIfExists = (override, fallback, config) =>
   override
