@@ -22,7 +22,11 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
-const overrideIfExists = require('./override');
+
+const overrideIfExists = (override, config) =>
+  override
+    ? require(override)(config)
+    : config;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -60,7 +64,7 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
-module.exports = overrideIfExists(paths.webpackOverride, null, {
+module.exports = overrideIfExists(paths.webpackOverride, {
   // Don't attempt to continue if there are any errors.
   bail: true,
   // We generate sourcemaps in production. This is slow but gives good results.
@@ -143,11 +147,8 @@ module.exports = overrideIfExists(paths.webpackOverride, null, {
               // @remove-on-eject-begin
               // TODO: consider separate config for production,
               // e.g. to enable no-console and no-debugger only in production.
-              baseConfig: overrideIfExists(paths.eslintOverride, paths.eslintrc, {
-                extends: [require.resolve('eslint-config-react-app')],
-              }),
               ignore: false,
-              useEslintrc: false,
+              useEslintrc: true,
               // @remove-on-eject-end
             },
             loader: require.resolve('eslint-loader'),
@@ -175,13 +176,13 @@ module.exports = overrideIfExists(paths.webpackOverride, null, {
             test: /\.(js|jsx)$/,
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
-            options: overrideIfExists(paths.babelOverride, paths.babelrc, {
+            options: {
               // @remove-on-eject-begin
-              babelrc: false,
+              babelrc: true,
               presets: [require.resolve('babel-preset-react-app')],
               // @remove-on-eject-end
               compact: true,
-            }),
+            },
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.

@@ -22,12 +22,10 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
-const overrideIfExists = (override, fallback, config) =>
+const overrideIfExists = (override, config) =>
   override
     ? require(override)(config)
-    : fallback
-      ? require(fallback) 
-      : config;
+    : config;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -42,7 +40,7 @@ const env = getClientEnvironment(publicUrl);
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
-module.exports = overrideIfExists(paths.webpackOverride, null, {
+module.exports = overrideIfExists(paths.webpackOverride, {
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
   // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
   devtool: 'cheap-module-source-map',
@@ -145,11 +143,8 @@ module.exports = overrideIfExists(paths.webpackOverride, null, {
               formatter: eslintFormatter,
               eslintPath: require.resolve('eslint'),
               // @remove-on-eject-begin
-              baseConfig: overrideIfExists(paths.eslintOverride, paths.eslintrc, {
-                extends: [require.resolve('eslint-config-react-app')],
-              }),
               ignore: false,
-              useEslintrc: false,
+              useEslintrc: true,
               // @remove-on-eject-end
             },
             loader: require.resolve('eslint-loader'),
@@ -178,16 +173,16 @@ module.exports = overrideIfExists(paths.webpackOverride, null, {
             test: /\.(js|jsx)$/,
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
-            options: overrideIfExists(paths.babelOverride, paths.babelrc, {
+            options: {
               // @remove-on-eject-begin
-              babelrc: false,
+              babelrc: true,
               presets: [require.resolve('babel-preset-react-app')],
               // @remove-on-eject-end
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
               cacheDirectory: true,
-            }),
+            },
           },
           // "postcss" loader applies autoprefixer to our CSS.
           // "css" loader resolves paths in CSS and adds assets as dependencies.

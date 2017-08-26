@@ -103,16 +103,6 @@ module.exports = {
 
   // custom files
   webpackOverride: existsApp('webpack.override.js'),
-  eslintOverride:  existsApp('eslint.override.js'),
-  eslintrc: 
-    existsApp('.eslintrc')
-    || existsApp('.eslintrc.js')
-    || existsApp('.eslintrc.json'),
-  babelOverride: existsApp('babel.override.js'),
-  babelrc: 
-    existsApp('.babelrc') 
-    || existsApp('.babelrc.js') 
-    || existsApp('.babelrc.json'),
 };
 
 const ownPackageJson = require('../package.json');
@@ -146,16 +136,6 @@ if (
 
     // custom files
     webpackOverride: existsOwn('webpack.override.js'),
-    eslintOverride:  existsOwn('eslint.override.js'),
-    eslintrc: 
-      existsOwn('.eslintrc')
-      || existsOwn('.eslintrc.js')
-      || existsOwn('.eslintrc.json'),
-    babelOverride: existsOwn('babel.override.js'),
-    babelrc: 
-      existsOwn('.babelrc')
-      || existsOwn('.babelrc.js') 
-      || existsOwn('.babelrc.json'),
   };
 }
 // @remove-on-eject-end
