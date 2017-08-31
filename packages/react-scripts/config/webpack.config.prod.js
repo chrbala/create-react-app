@@ -22,11 +22,17 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+const fs = require('fs');
 
 const overrideIfExists = (override, config) =>
   override
     ? require(override)(config)
     : config;
+
+const combineIfExists = (path, object) =>
+	path
+		? Object.assign(JSON.parse(fs.readFileSync(path, 'utf8')), object)
+		: object;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -176,13 +182,13 @@ module.exports = overrideIfExists(paths.webpackOverride, {
             test: /\.(js|jsx)$/,
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
-            options: {
+            options: combineIfExists(paths.babelrc, {
               // @remove-on-eject-begin
-              babelrc: true,
+              babelrc: false,
               presets: [require.resolve('babel-preset-react-app')],
               // @remove-on-eject-end
               compact: true,
-            },
+            }),
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.

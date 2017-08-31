@@ -75,12 +75,6 @@ module.exports = {
 
 // @remove-on-eject-begin
 const resolveOwn = relativePath => path.resolve(__dirname, '..', relativePath);
-const existsOwn = relativePath => {
-	const path = resolveApp(relativePath);
-	return fs.existsSync(path) 
-		? relativePath
-		: null;
-}
 
 // config before eject: we're in ./node_modules/react-scripts/config/
 module.exports = {
@@ -103,6 +97,7 @@ module.exports = {
 
   // custom files
   webpackOverride: existsApp('webpack.override.js'),
+  babelrc: existsApp('.babelrc'),
 };
 
 const ownPackageJson = require('../package.json');
@@ -133,9 +128,6 @@ if (
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),
     ownNodeModules: resolveOwn('node_modules'),
-
-    // custom files
-    webpackOverride: existsOwn('webpack.override.js'),
   };
 }
 // @remove-on-eject-end
